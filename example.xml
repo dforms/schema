@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xml-stylesheet type="text/xsl" href="html.xsl"?>
+<form>
+  <section name="sec1">
+    <field type="text" name="firstName">
+      <label>First Name</label>
+    </field>
+    <field type="text" name="lastName">
+      <label>Last Name</label>
+    </field>
+    <multirecords name="emails" visible="emailvisible">
+      <label>EMails</label>
+      <field type="email" name="email">
+        <label>EMail</label>
+      </field>
+      <field type="enum" name="type">
+        <label>Type</label>
+        <options>
+          <option>Home</option>
+          <option>Work</option>
+          <option>Other</option>
+        </options>
+      </field>
+    </multirecords>
+  </section>
+
+  <conditions>
+    <condition id="emailvisible">
+      <and>
+        <not>
+          <empty>
+            <fieldValue name="firstName"/>
+          </empty>
+        </not>
+        <not>
+          <empty>
+            <fieldValue name="lastName"/>
+          </empty>
+        </not>
+      </and>
+    </condition>
+  </conditions>
+</form>
