@@ -76,7 +76,7 @@ DField.prototype.render = function () {
 };
 
 DField.prototype.renderLabel = function (id) {
-    return jQuery("<label/>", {text: this.label, for: id});
+    return jQuery("<label/>", {text: this.label, for: id}).addClass("col-sm-2 control-label");
 };
 
 DField.prototype.setLabel = function (label) {
@@ -89,6 +89,9 @@ DField.prototype.setVisibleCondition = function (name) {
 
 DField.prototype.resolveConditions = function (conditions) {
     if (this.visibleConditionName) {
+        if (!conditions[this.visibleConditionName]) {
+            throw new ReferenceError("Unknown condition " + this.visibleConditionName);
+        }
         conditions[this.visibleConditionName].watch(this.visibilityChanged.bind(this));
         console.log("Resolved visibility condition");
     }
@@ -97,6 +100,10 @@ DField.prototype.resolveConditions = function (conditions) {
 DField.prototype.visibilityChanged = function (value) {
     console.log("Visibility changed ", value);
     this.setVisible(value);
+};
+
+DField.prototype.setHelp = function (help) {
+    this.help = help;
 };
 
 DField.prototype.destroy = function() {
@@ -111,10 +118,36 @@ DField.prototype.setVisible = function (value) {
     }
 };
 
+DField.prototype.renderInput = function () {
+    throw new ErrorException("Override renderInput");
+};
+
+DField.prototype.getInputID = function () {
+    return undefined;
+};
+
+DField.prototype.render = function () {
+    if (!this.html) {
+        var input = this.renderInput();
+        var label = this.renderLabel(this.getInputID());
+        var help;
+        if (this.help) {
+            help = jQuery("<span/>", {text: this.help}).addClass("help-block")
+        }
+
+        this.html = jQuery("<div/>").addClass("form-group")
+            .append(label)
+            .append(jQuery("<div/>").addClass("col-sm-10")
+                .append(input).append(help));
+    }
+    return this.html;
+};
+
 function DRepeating(name, parent) {
     DField.prototype.constructor.call(this, name);
     this.template = new DForm(name, parent);
     this.parent = parent;
+    this.delButton = null;
 }
 
 DRepeating.prototype = Object.create(DField.prototype);
@@ -122,36 +155,15 @@ DRepeating.prototype.constructor = DRepeating;
 DRepeating.prototype.template = null;
 DRepeating.prototype.rows = [];
 
-DRepeating.prototype.setVisible = function (value) {
-    if (value) {
-        this.html[0].show();
-        this.html[1].show();
-    } else {
-        this.html[0].hide();
-        this.html[1].hide();
-    }
-};
-
 DRepeating.prototype.getTemplate = function () {
     return this.template;
 };
 
-DRepeating.prototype.render = function () {
-    if (!this.html) {
-        this.body = jQuery("<subform/>");
-        this.addButton = jQuery("<button/>", {text: "Add"}).click(this.addRow.bind(this));
-        this.html = [jQuery("<tr/>")
-            .append(jQuery("<td/>")
-                .append(this.renderLabel()))
-            .append(jQuery("<td/>")
-                .append(jQuery("<table/>")
-                    .append(this.body))),
-            jQuery("<tr/>")
-                .append(jQuery("<td/>"))
-                .append(jQuery("<td/>")
-                    .append(this.addButton))];
-    }
-    return this.html;
+DRepeating.prototype.renderInput = function () {
+    this.addButton = jQuery("<button/>").addClass("btn btn-default btn-sm glyphicon glyphicon-plus").click(this.addRow.bind(this));
+    this.body = jQuery("<div/>");
+    this.delButton = jQuery("<button/>").addClass("btn btn-default btn-sm glyphicon glyphicon-minus").click(this.delRow.bind(this)).hide();
+    return jQuery("<div/>").append(this.body).append(this.addButton).append(this.delButton);
 };
 
 DRepeating.prototype.addRow = function (event) {
@@ -160,6 +172,14 @@ DRepeating.prototype.addRow = function (event) {
     this.body.append(newRow.render());
     if (event) {
         event.preventDefault();
+    }
+    this.delButton.show();
+};
+
+DRepeating.prototype.delRow = function () {
+    this.rows.pop().destroy();
+    if (this.rows.length === 0) {
+        this.delButton.hide();
     }
 };
 
@@ -178,7 +198,7 @@ DRepeating.prototype.setValue = function (value) {
         this.addRow();
     }
     while (this.rows.length > value.length) {
-        this.rows.pop().destroy();
+        this.delRow();
     }
     for (var i = 0; i < value.length; i++) {
         this.rows[i].setValue(value[i]);
@@ -250,7 +270,7 @@ DForm.prototype.resolveConditions = function (conditions) {
 
 DForm.prototype.render = function () {
     if (!this.html) {
-        this.html = jQuery("<tbody/>");
+        this.html = jQuery("<div/>");
         for (var i in this.fields) {
             if (this.fields.hasOwnProperty(i)) {
                 this.html.append(this.fields[i].render());
@@ -275,24 +295,29 @@ DInput.prototype.options = null;
 DInput.prototype.conditions = null;
 DInput.prototype.cloneInfo = {noCloneFields: ["conditions"]};
 
-DInput.prototype.render = function () {
-    if (!this.html) {
-        if (this.type === "enum") {
-            this.input = jQuery("<select/>");
-            for (var i = 0; i < this.options.length; i++) {
-                this.input.append(jQuery("<option/>", {text: this.options[i]}));
-            }
-        } else {
-            this.input = jQuery("<input/>");
+DInput.prototype.renderInput = function () {
+    if (this.type === "enum") {
+        this.input = jQuery("<select/>");
+        this.input.append(jQuery("<option/>", {value: "", text: "Please Select One"}));
+        for (var i = 0; i < this.options.length; i++) {
+            this.input.append(jQuery("<option/>", {text: this.options[i]}));
         }
-        this.input.addClass("form-control").uniqueId().change(this.changed.bind(this));
-        this.html = jQuery("<tr/>").addClass("form-group")
-            .append(jQuery("<td/>")
-                .append(this.renderLabel(this.input.attr("id"))))
-            .append(jQuery("<td/>")
-                .append(this.input));
+    } else {
+        this.input = jQuery("<input/>", {type: this.type});
     }
-    return this.html;
+    this.input.addClass("form-control").uniqueId().change(this.changed.bind(this));
+    if(this.placeholder) {
+        this.input.attr("placeholder",this.placeholder);
+    }
+    return this.input;
+};
+
+DInput.prototype.getInputID = function () {
+    return this.input.attr("id");
+};
+
+DInput.prototype.setPlaceholder = function(value) {
+    this.placeholder = value;
 };
 
 DInput.prototype.changed = function () {
@@ -420,7 +445,7 @@ ConditionAnd.prototype.toString = function () {
     for (var i = 0; i < this.conditions.length; i++) {
         rt[i] = this.conditions[i].toString();
     }
-    return "(" + rt.join(" and ") + ")";
+    return "(" + rt.join(") and (") + ")";
 };
 
 /**
@@ -439,6 +464,50 @@ ConditionAnd.prototype.evaluate = function (form) {
     for (var i = 0; i < this.conditions.length; i++) {
         if (!this.conditions[i].evaluate(form)) {
             rt = false;
+            break;
+        }
+    }
+
+
+    return rt;
+};
+
+function ConditionOr() {
+    this.conditions = [];
+}
+
+ConditionOr.prototype = Object.create(BaseCondition.prototype);
+ConditionOr.prototype.constructor = ConditionOr;
+
+ConditionOr.prototype.add = function (condition) {
+    this.conditions.push(condition);
+    return this;
+};
+
+ConditionOr.prototype.toString = function () {
+    var rt = [];
+    for (var i = 0; i < this.conditions.length; i++) {
+        rt[i] = this.conditions[i].toString();
+    }
+    return "(" + rt.join(") or (") + ")";
+};
+
+/**
+ * @param {Condition} condition
+ * @param {DForm} form
+ */
+ConditionOr.prototype.resolveFields = function (condition, form) {
+    for (var i = 0; i < this.conditions.length; i++) {
+        this.conditions[i].resolveFields(condition, form);
+    }
+};
+
+ConditionOr.prototype.evaluate = function (form) {
+    var rt = false;
+
+    for (var i = 0; i < this.conditions.length; i++) {
+        if (this.conditions[i].evaluate(form)) {
+            rt = true;
             break;
         }
     }
@@ -487,9 +556,21 @@ ConditionEquals.prototype.toString = function () {
  * @param {DForm} form
  */
 ConditionEquals.prototype.resolveFields = function (condition, form) {
-    this.left.resolveFields(condition, form);
-    this.right.resolveFields(condition, form);
+    if (this.left instanceof BaseCondition) {
+        this.left.resolveFields(condition, form);
+    }
+    if (this.right instanceof BaseCondition) {
+        this.right.resolveFields(condition, form);
+    }
 };
+
+ConditionEquals.prototype.evaluate = function (form) {
+    var left = this.left instanceof BaseCondition ? this.left.evaluate(form) : this.left;
+    var right = this.right instanceof BaseCondition ? this.right.evaluate(form) : this.right;
+
+    return left == right;
+};
+
 
 
 function ConditionFieldValue(name) {
@@ -569,7 +650,7 @@ function ConditionWatcher(conditions) {
 }
 
 ConditionWatcher.prototype.render = function () {
-    var html = jQuery("<table/>")
+    var html = jQuery("<table/>").addClass("table table-condensed")
         .append(jQuery("<thead/>")
             .append(jQuery("<tr/>")
                 .append(jQuery("<th/>", {text: "Name"}))
@@ -596,7 +677,10 @@ ConditionWatcher.prototype.render = function () {
 ConditionWatcher.prototype.renderValue = function (condition) {
     var currentValue = jQuery("<td/>");
     condition.watch(function (value) {
-        currentValue.html(value);
+        if (typeof value === "boolean") {
+            value = value ? "true" : "false";
+        }
+        currentValue.text(value);
     });
     return currentValue;
 };

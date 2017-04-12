@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://dforms.org/v1" xmlns="http://dforms.org/v1" attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="form" type="formType"/>
+  <xs:complexType name="conditionsType">
+    <xs:sequence>
+      <xs:element type="conditionType" name="condition"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="multirecordsType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="label" minOccurs="1"/>
+      <xs:element type="fieldType" name="field" maxOccurs="unbounded" minOccurs="1"/>
+      <xs:element type="helpType" name="help" maxOccurs="1" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name"/>
+    <xs:attribute type="xs:string" name="visible"/>
+  </xs:complexType>
+  <xs:complexType name="formType">
+    <xs:sequence>
+      <xs:element type="sectionType" name="section" minOccurs="1" maxOccurs="unbounded"/>
+      <xs:element type="conditionsType" name="conditions" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="sectionType">
+    <xs:choice maxOccurs="unbounded" minOccurs="1">
+      <xs:element type="fieldType" name="field" maxOccurs="unbounded"/>
+      <xs:element type="multirecordsType" name="multirecords" maxOccurs="unbounded"/>
+    </xs:choice>
+    <xs:attribute type="xs:string" name="name"/>
+  </xs:complexType>
+  <xs:complexType name="fieldType">
+    <xs:sequence>
+      <xs:element name="label" type="xs:string"/>
+      <xs:element type="optionsType" name="options" minOccurs="0"/>
+      <xs:element type="helpType" name="help" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="fieldTypeEnum" name="type" use="required"/>
+    <xs:attribute type="xs:string" name="name" use="required"/>
+    <xs:attribute type="xs:int" name="max-length"/>
+    <xs:attribute type="xs:string" name="placeholder"/>
+  </xs:complexType>
+  <xs:complexType name="helpType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string"/>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="fieldTypeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="text"/>
+      <xs:enumeration value="email"/>
+      <xs:enumeration value="currency"/>
+      <xs:enumeration value="number"/>
+      <xs:enumeration value="decimal"/>
+      <xs:enumeration value="date"/>
+      <xs:enumeration value="datetime"/>
+      <xs:enumeration value="time"/>
+      <xs:enumeration value="enum"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="optionsType">
+    <xs:sequence>
+      <xs:element name="option" maxOccurs="unbounded" minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--- conditions -->
+  <xs:group name="conditions">
+    <xs:choice>
+      <xs:element name="field" type="fieldValueType"/>
+      <xs:element name="and" type="andType"/>
+      <xs:element name="not" type="notType"/>
+      <xs:element name="empty" type="emptyType"/>
+      <xs:element name="or" type="orType"/>
+      <xs:element name="equals" type="equalsType"/>
+      <xs:element name="value" type="valueType"/>
+    </xs:choice>
+  </xs:group>
+  <xs:simpleType name="valueTypeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="text"/>
+      <xs:enumeration value="numeric"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="valueType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="type" type="valueTypeEnum" default="text"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="conditionType">
+    <xs:sequence>
+      <xs:group ref="conditions"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="id"/>
+  </xs:complexType>
+  <xs:complexType name="fieldValueType">
+    <xs:attribute type="xs:string" name="name" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="andType">
+    <xs:sequence>
+      <xs:group ref="conditions" maxOccurs="unbounded" minOccurs="2"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="orType">
+    <xs:sequence>
+      <xs:group ref="conditions" maxOccurs="unbounded" minOccurs="2"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="emptyType">
+    <xs:group ref="conditions"/>
+  </xs:complexType>
+  <xs:complexType name="notType">
+    <xs:group ref="conditions"/>
+  </xs:complexType>
+  <xs:complexType name="equalsType">
+    <xs:sequence>
+      <xs:group ref="conditions" maxOccurs="2" minOccurs="2"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

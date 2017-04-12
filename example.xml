@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <?xml-stylesheet type="text/xsl" href="html.xsl"?>
-<form>
+<form xmlns="http://dforms.org/v1">
   <section name="sec1">
-    <field type="text" name="firstName">
+    <field type="text" name="firstName" placeholder="Joe">
       <label>First Name</label>
+      <help>Enter your first name</help>
     </field>
-    <field type="text" name="lastName">
+    <field type="text" name="lastName" placeholder="Blogs">
       <label>Last Name</label>
     </field>
     <multirecords name="emails" visible="emailvisible">
       <label>EMails</label>
-      <field type="email" name="email">
+      <field type="email" name="email" placeholder="jblogs@example.com">
         <label>EMail</label>
       </field>
       <field type="enum" name="type">
@@ -21,23 +22,51 @@
           <option>Other</option>
         </options>
       </field>
+      <help>Enter as many as you want</help>
     </multirecords>
+  </section>
+  <section name="address">
+    <field type="text" name="address">
+      <label>Address</label>
+    </field>
+    <field type="number" name="postcode" max-length="4">
+      <label>Postcode</label>
+    </field>
+    <field type="enum" name="state">
+      <label>State</label>
+      <options>
+        <option>ACT</option>
+        <option>NSW</option>
+        <option>NT</option>
+        <option>QLD</option>
+        <option>SA</option>
+        <option>TAS</option>
+        <option>VIC</option>
+        <option>WA</option>
+      </options>
+    </field>
   </section>
 
   <conditions>
     <condition id="emailvisible">
-      <and>
-        <not>
-          <empty>
-            <fieldValue name="firstName"/>
-          </empty>
-        </not>
-        <not>
-          <empty>
-            <fieldValue name="lastName"/>
-          </empty>
-        </not>
-      </and>
+      <or>
+        <and>
+          <not>
+            <empty>
+              <field name="firstName"/>
+            </empty>
+          </not>
+          <not>
+            <empty>
+              <field name="lastName"/>
+            </empty>
+          </not>
+        </and>
+        <equals>
+          <field name="firstName"/>
+          <value type="text">Joe</value>
+        </equals>
+      </or>
     </condition>
   </conditions>
 </form>
