@@ -9,7 +9,7 @@
     <field type="text" name="lastName" placeholder="Blogs">
       <label>Last Name</label>
     </field>
-    <multirecords name="emails" visible="emailvisible">
+    <multirecords name="emails" visible="emailvisible" minRows="1">
       <label>EMails</label>
       <field type="email" name="email" placeholder="jblogs@example.com">
         <label>EMail</label>

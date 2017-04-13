@@ -2,6 +2,12 @@
 
 var conditions = [];
 
+function classof(o) {
+    if (o === null) return "Null";
+    if (o === undefined) return "Undefined";
+    return Object.prototype.toString.call(o).slice(8, -1);
+}
+
 function allowClone(name, cloneInfo) {
     var rt = true;
     if (cloneInfo) {
@@ -353,7 +359,7 @@ function BaseCondition() {
 
 BaseCondition.prototype.constructor = BaseCondition;
 BaseCondition.prototype.toString = function () {
-    throw new Error("Override toString for " + Object.getPrototypeOf(this).constructor.name);
+    throw new Error("Override toString for " + classof(this));
 };
 
 /**
@@ -361,7 +367,7 @@ BaseCondition.prototype.toString = function () {
  * @param {DForm} form
  */
 BaseCondition.prototype.resolveFields = function (condition, form) {
-    throw new Error("Override resolveFields for " + Object.getPrototypeOf(this).constructor.name);
+    throw new Error("Override resolveFields for " + classof(this));
 };
 
 BaseCondition.prototype.resolveConditions = function () {
@@ -686,14 +692,15 @@ ConditionWatcher.prototype.renderValue = function (condition) {
 };
 
 function endOfConditions() {
-    for (var i in conditions) {
+    var i;
+    for (i in conditions) {
         if (conditions.hasOwnProperty(i)) {
             conditions[i].resolveConditions(conditions[i], conditions);
         }
     }
     form.resolveConditions(conditions);
     jQuery("body").append((new ConditionWatcher(conditions)).render());
-    for (var i in conditions) {
+    for (i in conditions) {
         if (conditions.hasOwnProperty(i)) {
             conditions[i].calculate();
         }

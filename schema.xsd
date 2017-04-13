@@ -15,6 +15,8 @@
     </xs:sequence>
     <xs:attribute type="xs:string" name="name"/>
     <xs:attribute type="xs:string" name="visible"/>
+    <xs:attribute type="xs:unsignedInt" name="minRows" default="0"/>
+    <xs:attribute type="xs:unsignedInt" name="maxRows"/>
   </xs:complexType>
   <xs:complexType name="formType">
     <xs:sequence>
