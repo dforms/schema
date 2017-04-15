@@ -50,3 +50,6 @@ Temporary Items
 .idea/*
 !.idea/modules.xml
 !.idea/encodings.xml
+node_modules
+dist
+typings

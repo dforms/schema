@@ -1,0 +1,7 @@
+{
+  "name": "dforms",
+  "dependencies": {},
+  "globalDevDependencies": {
+    "jquery": "registry:dt/jquery#1.10.0+20170310222111"
+  }
+}

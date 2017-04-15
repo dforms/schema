@@ -1,0 +1,40 @@
+{
+  "name": "dforms",
+  "version": "1.0.0",
+  "description": "lll",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --hot --inline --no-info --content-base ./",
+    "prepublish": "typings install",
+    "watch": "webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dforms/schema.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dforms/schema/issues"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.2.1",
+    "jquery-ui": "^1.12.1",
+    "jsonschema": "^1.1.1"
+  },
+  "main": "src/html.ts",
+  "homepage": "https://github.com/dforms/schema#readme",
+  "devDependencies": {
+    "@types/node": "^7.0.12",
+    "jsoneditor": "^5.5.11",
+    "nodemon": "^1.11.0",
+    "source-map-loader": "^0.2.1",
+    "ts-loader": "^2.0.3",
+    "ts-node": "^3.0.2",
+    "typescript": "^2.3.0",
+    "typings": "^2.1.1",
+    "webpack": "^2.4.1",
+    "webpack-dev-server": "^2.4.2"
+  }
+}

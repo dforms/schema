@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "module": "amd",
+    "target": "es5",
+    "sourceMap": true,
+    "typeRoots" : ["./typings/*","./node_modules/@types"],
+    "moduleResolution": "node"
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "compileOnSave": true
+}

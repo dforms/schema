@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <link href="node_modules/jsoneditor/dist/jsoneditor.min.css" rel="stylesheet" type="text/css">
+    <script src="node_modules/jsoneditor/dist/jsoneditor.min.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/jquery-ui/ui/unique-id.js"></script>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bundle.js"></script>
+</head>
+<body>
+<script>
+    jQuery(function () {
+        var form;
+        var options = {
+            modes: ['text', 'code', 'tree', 'form', 'view'],
+            ace: ace
+        };
+        var layoutEditor = new JSONEditor(document.getElementById("layout"), options);
+        var dataEditor = new JSONEditor(document.getElementById("json"), options);
+
+        jQuery.ajax("example.json", {
+            success: function (data) {
+                layoutEditor.set(data);
+                loadLayout();
+            }
+        });
+
+        function save() {
+            form.save();
+        }
+
+        function load() {
+            form.populateFromJSON(dataEditor.get());
+        }
+
+        function loadLayout() {
+            if (form) {
+                form.save();
+                form.destroy();
+            }
+            DForms.Form.loadForm(layoutEditor.get(), function (forml) {
+                form = forml;
+                form.setSaveCallback(function (data) {
+                    dataEditor.set(data);
+                });
+                jQuery("#form").append(form.render());
+                jQuery("#debug").append(form.renderDebug());
+                load();
+                form.save();
+            })
+        }
+        jQuery("#save").click(save);
+        jQuery("#load").click(load);
+        jQuery("#loadlayout").click(loadLayout);
+    });
+</script>
+<table width="100%">
+    <tr>
+        <td valign="top">
+            <div id="json" style="height: 500px;"></div>
+            <button id="save" class="btn btn-default">Save</button>
+            <button id="load" class="btn btn-default">Load</button>
+            <span id="debug"></span>
+            <button id="loadlayout" class="btn btn-default">Load Layout</button>
+            <div id="layout" style="height: 500px;"></div>
+        </td>
+        <td valign="top">
+            <div id="form" class="container"></div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

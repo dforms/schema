@@ -169,7 +169,7 @@
         <script src="https://code.jquery.com/jquery-2.2.4.min.js"/>
         <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"/>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
-        <script src="html.js"/>
+        <script src="htmlts.js"/>
         <script>
           var form = new DForm("Top");
           function save() {

@@ -1,0 +1,250 @@
+{
+  "$schema": "http://dforms.org/v1#",
+  "sections": {
+    "summary": {
+      "label": "Summary",
+      "fields": {
+        "address": {
+          "type": "static",
+          "label": "Property Address"
+        },
+        "pt_jr_id": {
+          "type": "enum",
+          "label": "Property Type",
+          "options": [
+            "Apartment",
+            "Detached House",
+            "Group of Flats",
+            "High Density Apartment",
+            "Housing Co Op- without LMI",
+            "Housing Co Op- with LMI",
+            "Inner city apartments",
+            "Low Density Apartment",
+            "Medium Density Apartment",
+            "Multi detached houses",
+            "Multi unit",
+            "Other",
+            "Rural Lifestyle",
+            "Serviced apartment",
+            "Semi Detached House",
+            "Specialised Accomodation",
+            "Strata Title Unit",
+            "Stratum Title Unit",
+            "Townhouse",
+            "Warehouse Conversion",
+            "Multiple Dwellings on One Title",
+            "TBE Multiple Dwellings on One Title",
+            "Vacant Land"
+          ],
+          "required": true
+        },
+        "ptt_id": {
+          "type": "enum",
+          "label": "Type",
+          "options": {
+            "1": "Freehold",
+            "2": "Strata",
+            "3": "Group",
+            "4": "Community",
+            "5": "Corporate",
+            "6": "Company",
+            "7": "Purple",
+            "8": "Green",
+            "9": "Moiety",
+            "10": "Unit",
+            "11": "Stratum",
+            "12": "CrownLand",
+            "13": "CrownLease",
+            "14": "Leasehold",
+            "15": "Other"
+          }
+        },
+        "lot": {
+          "type": "text",
+          "label": "Lot/Unit No",
+          "help": "Lot 123"
+        },
+        "plan_no": {
+          "type": "text",
+          "label": "Plan No",
+          "help": "(e.g DP/SP/CP)"
+        },
+        "volume": {
+          "type": "text",
+          "label": "Volume/Folio No"
+        },
+        "further_detail": {
+          "type": "text",
+          "label": "Further Detail"
+        },
+        "ppt_restriction": {
+          "type": "text",
+          "label": "Encumbrances / Restrictions",
+          "suggestions": [
+            "Drainage Easement.",
+            "Encumberance No: ####",
+            "None apparent from Inspection.",
+            "None disclosed or evident.",
+            "Party Wall Rights",
+            "Sewer Drainage Easements",
+            "Sewer Easement"
+          ]
+        },
+        "ppt_dimensions": {
+          "type": "text",
+          "label": "ppt_dimensions"
+        },
+        "area": {
+          "type": "multiple",
+          "label": "Site Area",
+          "fields": {
+            "ppt_area": {
+              "type": "decimal",
+              "label": ""
+            },
+            "ppt_area_type": {
+              "type": "enum",
+              "label": "",
+              "default": "m2",
+              "options": [
+                "m2",
+                "ha"
+              ]
+            }
+          }
+        },
+        "ppt_zone": {
+          "type": "text",
+          "label": "ppt_zone"
+        },
+        "ppt_zone_effect": {
+          "type": "text",
+          "label": "ppt_zone_effect"
+        },
+        "ppt_lga": {
+          "type": "text",
+          "label": "ppt_lga",
+          "visible": "showx"
+        },
+        "building_type": {
+          "type": "enum",
+          "label": "building_type",
+          "options": [
+            "Dwelling",
+            "Unit",
+            "Townhouse",
+            "Apartment",
+            "Terrace House",
+            "Maisonette",
+            "Duplex",
+            "Villa",
+            "Multiple - Occupancy See Main Building Description",
+            "Rental Flats"
+          ]
+        },
+        "currentuse": {
+          "type": "enum",
+          "label": "currentuse",
+          "options": {
+            "1": "Residential",
+            "2": "Multi Residential",
+            "3": "Commercial / Residential",
+            "4": "Non Residential",
+            "5": "Commercial",
+            "6": "Serviced Apartment",
+            "7": "Residential - Vacant Land",
+            "8": "Student Accommodation",
+            "9": "Seniors Living",
+            "10": "Rural",
+            "11": "Rural / Residential"
+          },
+          "valid": "showy"
+        },
+        "built": {
+          "type": "multiple",
+          "label": "built",
+          "fields": {
+            "propdet_year_built_circa": {
+              "type": "enum",
+              "label": "",
+              "options": [
+                "Built About",
+                "Year Built",
+                "Circa",
+                "To Be Erected"
+              ]
+            },
+            "propdet_year_built": {
+              "type": "number",
+              "label": ""
+            }
+          }
+        },
+        "propdet_value_rent_actual": {
+          "type": "currency",
+          "label": "Rental (Curr.)",
+          "valid": "rentvalid"
+        },
+        "additions": {
+          "type": "repeating",
+          "label": "Additions",
+          "inline": true,
+          "fields": {
+            "propdet_year_built_additions": {
+              "type": "number",
+              "placeholder": "Year",
+              "label": ""
+            },
+            "additions": {
+              "type": "text",
+              "placeholder": "Description",
+              "label": ""
+            }
+          },
+          "minRows": 1
+        }
+      }
+    },
+    "risk": {
+      "label": "Risk"
+    },
+    "value": {
+      "label": "Value"
+    },
+    "land": {
+      "label": "Land"
+    },
+    "building": {
+      "label": "Building"
+    },
+    "sales": {
+      "label": "Sales Evidence"
+    },
+    "comments": {
+      "label": "Comments"
+    },
+    "market_risk": {
+      "label": "Market Risk"
+    }
+  },
+  "expressions": {
+    "showx": {
+      "and": [
+        { "not": { "empty": { "field": "propdet_value_rent_actual" } } },
+        { "empty": { "field": "currentuse" } }
+      ]
+    },
+    "showy": {
+      "equals": [ { "field": "currentuse" }, { "value": 1 } ]
+    },
+    "showz": {
+      "equals": [ { "value": 1 }, { "value": 1 } ]
+    },
+    "rentvalid": {
+      "or": [
+        { "greaterthan": [ { "field": "propdet_value_rent_actual" }, { "value": 0 } ] },
+        { "empty": { "field": "propdet_value_rent_actual" } }
+      ]
+    }
+  }
+}
