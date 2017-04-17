@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "lll",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --hot --inline --no-info --content-base ./",
     "prepublish": "typings install",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "test": "jest",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
   "homepage": "https://github.com/dforms/schema#readme",
   "devDependencies": {
     "@types/node": "^7.0.12",
+    "jest": "^19.0.2",
     "jsoneditor": "^5.5.11",
     "nodemon": "^1.11.0",
     "source-map-loader": "^0.2.1",
