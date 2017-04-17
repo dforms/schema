@@ -1,10 +1,10 @@
 {
   "name": "dforms",
   "version": "1.0.0",
-  "description": "lll",
+  "description": "DForms",
   "scripts": {
     "start": "webpack-dev-server --hot --inline --no-info --content-base ./",
-    "prepublish": "typings install",
+    "postinstall": "typings install",
     "watch": "webpack --watch",
     "test": "jest",
     "build": "webpack"
@@ -13,8 +13,8 @@
     "type": "git",
     "url": "git+https://github.com/dforms/schema.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "David van Laatum <david@vanlaatum.id.au>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/dforms/schema/issues"
   },
@@ -38,5 +38,8 @@
     "typings": "^2.1.1",
     "webpack": "^2.4.1",
     "webpack-dev-server": "^2.4.2"
-  }
+  },
+  "files": [
+    "dforms.js"
+  ]
 }

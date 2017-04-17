@@ -53,3 +53,5 @@ Temporary Items
 node_modules
 dist
 typings
+*.tgz
+dforms.js

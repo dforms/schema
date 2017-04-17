@@ -759,39 +759,25 @@ export module Form {
         }
     }
 
-    let schema = null;
     let validator = new jsonschema.Validator();
+    let schema = require("../schema.json");
+    validator.addSchema(schema, "http://org/v1#");
 
     export function loadForm(layout, callback: (DForm) => void, factory: DFactory = null) {
         if (!factory) {
             factory = new DDefaultFactory();
         }
-        if (!schema) {
-            jQuery.ajax('schema.json', {
-                dataType: "json",
-                crossDomain: true,
-                success: function (data, textStatus, jqXHR) {
-                    schema = data;
-                    validator.addSchema(schema, "http://org/v1#");
-                    loadForm(layout, callback, factory);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(textStatus, errorThrown);
-                }
-            });
-        } else {
-            try {
-                let valid = validator.validate(layout, schema);
-                if (valid.valid) {
-                    let f = factory.form(name, layout);
-                    f.loadLayout(layout, factory);
-                    callback(f);
-                } else {
-                    alert(valid.toString());
-                }
-            } catch (e) {
-                alert(e.toString());
+        try {
+            let valid = validator.validate(layout, schema);
+            if (valid.valid) {
+                let f = factory.form(name, layout);
+                f.loadLayout(layout, factory);
+                callback(f);
+            } else {
+                alert(valid.toString());
             }
+        } catch (e) {
+            alert(e.toString());
         }
     }
 

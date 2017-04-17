@@ -1,7 +1,7 @@
 module.exports = {
     entry: './src/dforms.ts',
     output: {
-        filename: 'bundle.js',
+        filename: 'dforms.js',
         libraryTarget: "var",
         library: "DForms"
     },
@@ -14,7 +14,7 @@ module.exports = {
     module: {
         loaders: [
             {test: /\.tsx?$/, loader: 'ts-loader'}
-        ],
+        ]
     },
     devtool: 'inline-source-map'
 }
