@@ -7,6 +7,7 @@ pipeline {
                     sh 'npm install-test'
                 }
                 junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: 'junit.xml'
+                step([$class: 'WsCleanup'])
             }
         }
     }
