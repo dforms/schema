@@ -7,6 +7,7 @@ pipeline {
                     sh 'npm install-test'
                 }
                 junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: 'junit.xml'
+                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'coverage/remapped/html', reportFiles: 'index.html', reportName: 'Coverage'])
                 step([$class: 'WsCleanup'])
             }
         }
