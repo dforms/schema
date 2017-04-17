@@ -2,6 +2,7 @@
   "name": "dforms",
   "dependencies": {},
   "globalDevDependencies": {
+    "jest": "registry:dt/jest#19.2.0+20170312200138",
     "jquery": "registry:dt/jquery#1.10.0+20170310222111"
   }
 }
