@@ -761,7 +761,7 @@ export module Form {
 
     let validator = new jsonschema.Validator();
     let schema = require("../schema.json");
-    validator.addSchema(schema, "http://org/v1#");
+    validator.addSchema(schema, "http://dforms.org/v1#");
 
     export function loadForm(layout, callback: (DForm) => void, factory: DFactory = null) {
         if (!factory) {

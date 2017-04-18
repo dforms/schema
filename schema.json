@@ -13,7 +13,7 @@
         "fields": {
           "type": "object",
           "patternProperties": {
-            "^[a-zA-Z_]+$": { "$ref": "#/definitions/fields" }
+            "^[a-zA-Z0-9_]+$": { "$ref": "#/definitions/fields" }
           }
         }
       },
@@ -122,7 +122,7 @@
         "fields": {
           "type": "object",
           "patternProperties": {
-            "^[a-zA-Z_]+$": { "$ref": "#/definitions/fields" }
+            "^[a-zA-Z0-9_]+$": { "$ref": "#/definitions/fields" }
           }
         },
         "label": { "type": "string" },
@@ -207,7 +207,7 @@
         "fields": {
           "type": "object",
           "patternProperties": {
-            "^[a-zA-Z_]+$": { "$ref": "#/definitions/fields" }
+            "^[a-zA-Z0-9_]+$": { "$ref": "#/definitions/fields" }
           }
         },
         "label": { "type": "string" },
@@ -218,7 +218,7 @@
         "expressions": {
           "type": "object",
           "patternProperties": {
-            "^[a-zA-Z_]+$": { "$ref": "#/definitions/expressions" }
+            "^[a-zA-Z0-9_]+$": { "$ref": "#/definitions/expressions" }
           },
           "additionalProperties": false
         }
@@ -229,7 +229,9 @@
     "conditionAnd": { "type": "array", "minItems": 2, "items": { "$ref": "#/definitions/expressions" } },
     "conditionOr": { "type": "array", "minItems": 2, "items": { "$ref": "#/definitions/expressions" } },
     "conditionGreaterThan": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/definitions/expressions" } },
+    "conditionGreaterThanOrEqualTo": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/definitions/expressions" } },
     "conditionLessThan": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/definitions/expressions" } },
+    "conditionLessThanOrEqualTo": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/definitions/expressions" } },
     "conditionNot": { "$ref": "#/definitions/expressions" },
     "conditionEmpty": { "$ref": "#/definitions/expressions" },
     "conditionValue": { "oneOf": [ { "type": "string" }, { "type": "number" } ] },
@@ -237,6 +239,7 @@
       "type": "array", "minItems": 2, "items": { "$ref": "#/definitions/expressions" }
     },
     "conditionField": { "type": "string" },
+    "conditionExpression": { "type": "string" },
     "expressions": {
       "oneOf": [
         { "properties": { "and": { "$ref": "#/definitions/conditionAnd" } }, "additionalProperties": false },
@@ -246,8 +249,11 @@
         { "properties": { "equals": { "$ref": "#/definitions/conditionEquals" } }, "additionalProperties": false },
         { "properties": { "empty": { "$ref": "#/definitions/conditionEmpty" } }, "additionalProperties": false },
         { "properties": { "value": { "$ref": "#/definitions/conditionValue" } }, "additionalProperties": false },
-        { "properties": { "greaterthan": { "$ref": "#/definitions/conditionGreaterThan" } }, "additionalProperties": false },
-        { "properties": { "lessthan": { "$ref": "#/definitions/conditionLessThan" } }, "additionalProperties": false }
+        { "properties": { ">": { "$ref": "#/definitions/conditionGreaterThan" } }, "additionalProperties": false },
+        { "properties": { ">=": { "$ref": "#/definitions/conditionGreaterThanOrEqualTo" } }, "additionalProperties": false },
+        { "properties": { "<": { "$ref": "#/definitions/conditionLessThan" } }, "additionalProperties": false },
+        { "properties": { "<=": { "$ref": "#/definitions/conditionLessThanOrEqualTo" } }, "additionalProperties": false },
+        { "properties": { "expression": { "$ref": "#/definitions/conditionExpression" } }, "additionalProperties": false }
       ]
     }
   },
@@ -255,7 +261,7 @@
     "sections": {
       "type": "object",
       "patternProperties": {
-        "^[a-zA-Z_]+$": {
+        "^[a-zA-Z0-9_]+$": {
           "$ref": "#/definitions/section"
         }
       },
@@ -264,7 +270,7 @@
     "expressions": {
       "type": "object",
       "patternProperties": {
-        "^[a-zA-Z_]+$": { "$ref": "#/definitions/expressions" }
+        "^[a-zA-Z0-9_]+$": { "$ref": "#/definitions/expressions" }
       },
       "additionalProperties": false
     }

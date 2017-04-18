@@ -39,10 +39,14 @@ export module Expressions {
                 return new DConditionAnd(data.and, this);
             } else if (data.hasOwnProperty("or") && data.or instanceof Array) {
                 return new DConditionOr(data.or, this);
-            } else if (data.hasOwnProperty("greaterthan") && data.greaterthan instanceof Array) {
-                return new DConditionGreaterThan(data.greaterthan, this);
-            } else if (data.hasOwnProperty("lessthan") && data.lessthan instanceof Array) {
-                return new DConditionLessThan(data.lessthan, this);
+            } else if (data.hasOwnProperty(">") && data['>'] instanceof Array) {
+                return new DConditionGreaterThan(data['>'], this);
+            } else if (data.hasOwnProperty(">=") && data['>='] instanceof Array) {
+                return new DConditionGreaterThanOrEqualTo(data['>='], this);
+            } else if (data.hasOwnProperty("<") && data['<'] instanceof Array) {
+                return new DConditionLessThan(data['<'], this);
+            } else if (data.hasOwnProperty("<=") && data['<='] instanceof Array) {
+                return new DConditionLessThanOrEqualTo(data['<='], this);
             } else if (data.hasOwnProperty("not") && data.not instanceof Object) {
                 return new DConditionNot(data.not, this);
             } else if (data.hasOwnProperty("empty") && data.empty instanceof Object) {
@@ -311,6 +315,24 @@ export module Expressions {
         }
     }
 
+    export class DConditionGreaterThanOrEqualTo extends DConditionMultiple {
+        protected boolName(): string {
+            return ">=";
+        }
+
+        public evaluate(form: DFieldContainerInterface): any {
+            let rt = false;
+            let first = this.sub[0].evaluate(form);
+            let second = this.sub[1].evaluate(form);
+
+            if (first >= second) {
+                rt = true;
+            }
+
+            return rt;
+        }
+    }
+
     export class DConditionLessThan extends DConditionMultiple {
         protected boolName(): string {
             return "<";
@@ -322,6 +344,24 @@ export module Expressions {
             let second = this.sub[1].evaluate(form);
 
             if (first < second) {
+                rt = true;
+            }
+
+            return rt;
+        }
+    }
+
+    export class DConditionLessThanOrEqualTo extends DConditionMultiple {
+        protected boolName(): string {
+            return "<=";
+        }
+
+        public evaluate(form: DFieldContainerInterface): any {
+            let rt = false;
+            let first = this.sub[0].evaluate(form);
+            let second = this.sub[1].evaluate(form);
+
+            if (first <= second) {
                 rt = true;
             }
 

@@ -242,7 +242,7 @@
     },
     "rentvalid": {
       "or": [
-        { "greaterthan": [ { "field": "propdet_value_rent_actual" }, { "value": 0 } ] },
+        { ">": [ { "field": "propdet_value_rent_actual" }, { "value": 0 } ] },
         { "empty": { "field": "propdet_value_rent_actual" } }
       ]
     }
